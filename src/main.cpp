@@ -6,11 +6,11 @@
 #include <DallasTemperature.h>
 
 // =========================
-// PIN DEFINITIONS
+// Penjelasan pin
 // =========================
 
 // DS18B20
-#define ONE_WIRE_BUS 32 // <-- PIN DATA DS18B20
+#define ONE_WIRE_BUS 32 // <-- PIN DATA/DQ DS18B20
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -32,10 +32,7 @@ PubSubClient client(espClient);
 
 unsigned long lastMsg = 0;
 
-// =========================
 // WIFI FUNCTION
-// =========================
-
 void setup_wifi()
 {
   delay(10);
@@ -120,10 +117,7 @@ float getDistance()
   return distance;
 }
 
-// =========================
 // SETUP
-// =========================
-
 void setup()
 {
   Serial.begin(115200);
@@ -157,18 +151,18 @@ void loop()
   {
     lastMsg = now;
 
-    // --- Read DS18B20 ---
+    // --- DS18B20 ---
     sensors.requestTemperatures();
     float tempC = sensors.getTempCByIndex(0);
 
-    // --- Read Ultrasonic ---
+    // --- Ultrasonic ---
     float distance = getDistance();
 
-    // Publish MQTT
+    // Publish ke MQTT
     client.publish("/cyberacademy/temperature", String(tempC).c_str());
     client.publish("/cyberacademy/distance", String(distance).c_str());
 
-    // LOCAL SERIAL OUTPUT
+    // OUTPUT LOCAL
     Serial.print("Temperature: ");
     Serial.print(tempC);
     Serial.println("°C");
